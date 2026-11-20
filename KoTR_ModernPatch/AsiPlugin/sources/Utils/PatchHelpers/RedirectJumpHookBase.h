@@ -26,7 +26,7 @@ private:
 
     uint8_t backupBytes_[redirectJumpInstructionSize]{};
 
-    void *original_;
+    void *original_{nullptr};
     bool isInstalled_{false};
 };
 

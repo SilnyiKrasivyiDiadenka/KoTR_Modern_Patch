@@ -24,7 +24,7 @@ private:
     TrampolineHookBase(const TrampolineHookBase &other) = delete;
 
     static const int trampolineSizeLimit = 32;
-    uint8_t trampoline_[trampolineSizeLimit];
+    uint8_t trampoline_[trampolineSizeLimit]{0};
 
     bool isInstalled_{false};
 };
