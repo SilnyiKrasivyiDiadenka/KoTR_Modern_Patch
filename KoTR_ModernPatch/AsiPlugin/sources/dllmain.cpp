@@ -2,6 +2,8 @@
 #include <Windows.h>
 
 #include <iostream>
+#include <memory>
+#include <vector>
 
 #include "Utils\ExeUtils.h"
 
@@ -17,10 +19,15 @@
 #include "Hooks\QueueSortingFix.h"
 #include "Hooks\ExtCameraFix.h"
 #include "Hooks\InfoPanelFix.h"
+#include "Hooks\LodFix.h"
 //#include "Hooks\HorizontalRainFix.h"
 //#include "Utils\CPatch.h"
 
 using namespace std;
+
+namespace {
+	std::vector<std::unique_ptr<IPatch>> patchHolder;
+}
 
 bool printDebugInfo;
 void printInfo(const char* text){
@@ -117,6 +124,15 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 			if (GetPrivateProfileIntA("patches", "InfoPanelFix", 0, configName) && gameVersion >= 60) {
 				if (InfoPanelFix::injectHooks()) {
 					printInfo("[PATCH]: applied information panel patch");
+				}
+			}
+
+			if (GetPrivateProfileIntA("patches", "LodFix", 0, configName)) {
+				auto lodFix = LodFixFactory::create(gameVersion);
+				if (lodFix && lodFix->InjectHooks()) {
+					std::string log = "[PATCH]: injected " + lodFix->GetName() + " patch";
+					printInfo(log.c_str());
+					patchHolder.push_back(std::move(lodFix));
 				}
 			}
 
