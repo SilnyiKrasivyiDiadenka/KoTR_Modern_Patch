@@ -26,7 +26,7 @@
 using namespace std;
 
 namespace {
-	std::vector<std::unique_ptr<IPatch>> patchHolder;
+std::vector<std::unique_ptr<IPatch>> patchHolder;
 }
 
 bool printDebugInfo;
